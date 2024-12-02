@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.get-commit.outputs.hash }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Amazon ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
+
+      - name: Get short commit hash
+        id: get-commit
+        run: echo "::set-output name=hash::$(git rev-parse --short=5 HEAD)"
+
+      - name: Build and push Docker image
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          IMAGE_TAG: ${{ steps.get-commit.outputs.hash }}
+          REPOSITORY_URI: ${{ secrets.ECR_URI }}
+        run: |
+          cd Docker
+          docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+          docker push $REPOSITORY_URI:$IMAGE_TAG
+
+  security:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
+
+      - name: Pull Docker image from ECR
+        run: |
+          docker pull ${{ secrets.ECR_URI }}:${{ needs.build-and-push.outputs.image_tag }}
+
+      - name: Install Snyk CLI
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          npm install -g snyk
+          snyk auth $SNYK_TOKEN
+
+      - name: Snyk Docker Scan
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk container test ${{ secrets.ECR_URI }}:${{ needs.build-and-push.outputs.image_tag }} || true
+        shell: bash
