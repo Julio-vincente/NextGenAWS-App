@@ -3,7 +3,6 @@ import pymysql
 
 app = Flask(__name__)
 
-# Configurações do RDS
 RDS_CONFIG = {
     'host': 'aaaa',
     'user': 'aaaa',
