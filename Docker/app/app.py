@@ -6,10 +6,10 @@ import logging
 app = Flask(__name__)
 
 # Configuração do banco de dados
-db_host = os.getenv("DB_HOST")
-db_user = os.getenv("DB_USER")
-db_password = os.getenv("DB_PASSWORD")
-db_name = os.getenv("DB_NAME")  
+db_host = os.getenv("DB_HOST", "localhost")
+db_user = os.getenv("DB_USER", "root")
+db_password = os.getenv("DB_PASSWORD", "")
+db_name = os.getenv("DB_NAME", "library")
 
 RDS_CONFIG = {
     "host": db_host,
@@ -72,4 +72,5 @@ def authors():
         return jsonify({"error": "Erro ao buscar autores"}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    port = int(os.getenv("PORT", 80))
+    app.run(host="0.0.0.0", port=port)
