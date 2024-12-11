@@ -14,10 +14,28 @@
           "protocol": "tcp"
         }
       ],
+      "environment": [
+        {
+          "name": "DB_NAME",
+          "value": "library"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "terraform-20241211112222548900000005.c1oyq04uulzc.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "name": "DB_USER",
+          "value": "Administrator"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "Senai-134"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/service_app",
+          "awslogs-group": "/ecs/tasks-logs",
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
