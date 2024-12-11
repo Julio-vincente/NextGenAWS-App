@@ -63,14 +63,23 @@ jobs:
           npm install -g snyk
           snyk auth "$SNYK_TOKEN"
 
-      # 3. Obter o hash curto do commit
+      # 3. Login no Amazon ECR
+      - name: Log in to Amazon ECR
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_URI }}
+
+      # 4. Obter o hash curto do commit
       - name: Get short commit hash
         id: get-commit
         run: |
           calculatedSha=$(git rev-parse --short "${{ github.sha }}")
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      # 4. Executar o Snyk Scan no container
+      # 5. Executar o Snyk Scan no container
       - name: Snyk Docker Scan
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
