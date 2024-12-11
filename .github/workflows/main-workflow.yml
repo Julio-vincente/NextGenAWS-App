@@ -15,7 +15,7 @@ jobs:
       image_tag: ${{ steps.get-commit.outputs.hash }}
     steps:
       # 1. Checkout do código
-      - name: Checkout code
+      - name: Checkout mode
         uses: actions/checkout@v2
 
       # 2. Login no Amazon ECR
@@ -43,7 +43,7 @@ jobs:
           cd Docker
           docker build -t $REPOSITORY_URI:$IMAGE_TAG .
           docker push $REPOSITORY_URI:$IMAGE_TAG
-          echo "image_tag=${IMAGE_TAG}" >> $GITHUB_ENV
+          echo "::set-output name=image_tag::$IMAGE_TAG"
 
   Scan-Container:
     runs-on: ubuntu-latest
@@ -62,22 +62,13 @@ jobs:
           npm install -g snyk
           snyk auth $SNYK_TOKEN
 
-        # 3. Login in AWS
-      # - name: Log in to Amazon ECR
-      #   env:
-      #     AWS_REGION: ${{ env.AWS_REGION }}
-      #   run: |
-      #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  
-      # 4. Executar o Snyk Scan
+      # 3. Executar o Snyk Scan
       - name: Snyk Docker Scan
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           cd Docker
-          snyk container test ${{ needs.Register-Image.outputs.IMAGE_TAG }} --file=Dockerfile 
-        shell: bash
+          snyk container test ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }} --file=Dockerfile
 
   update-task-definition:
     runs-on: ubuntu-latest
