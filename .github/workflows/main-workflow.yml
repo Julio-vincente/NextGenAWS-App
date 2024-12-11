@@ -67,8 +67,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          cd Docker
-          snyk container test ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }} --file=Dockerfile
+          snyk container test ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }} 
 
   update-task-definition:
     runs-on: ubuntu-latest
