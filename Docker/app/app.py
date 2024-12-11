@@ -6,10 +6,10 @@ import logging
 app = Flask(__name__)
 
 # Configuração do banco de dados
-db_host = os.getenv("DB_HOST", "localhost")
-db_user = os.getenv("DB_USER", "root")
-db_password = os.getenv("DB_PASSWORD", "")
-db_name = os.getenv("DB_NAME", "library")
+db_host = os.getenv("DB_HOST")
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_name = os.getenv("DB_NAME")
 
 RDS_CONFIG = {
     "host": db_host,
