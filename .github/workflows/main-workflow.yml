@@ -76,7 +76,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           cd Docker
-          snyk container test ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.IMAGE_TAG }} --file=Dockerfile 
+          snyk container test ${{ needs.Register-Image.outputs.IMAGE_TAG }} --file=Dockerfile 
         shell: bash
 
   update-task-definition:
