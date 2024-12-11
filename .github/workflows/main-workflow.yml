@@ -62,6 +62,10 @@ jobs:
           npm install -g snyk
           snyk auth $SNYK_TOKEN
 
+      - name: Debug Image Name
+        run: |
+          echo "Image name: ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }}"        
+
       # 3. Executar o Snyk Scan
       - name: Snyk Docker Scan
         env:
