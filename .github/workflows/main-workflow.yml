@@ -46,6 +46,40 @@ jobs:
 
           echo "image_tag=${IMAGE_TAG}" >> $GITHUB_ENV
 
+              # 4. Instalação do Snyk CLI
+      - name: Install Snyk CLI
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          npm install -g snyk
+          snyk auth $SNYK_TOKEN
+      - name: Install Snyk CLI
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          npm install -g snyk
+          snyk auth $SNYK_TOKEN
+    # 5. Executar o Snyk Scan
+      - name: Snyk Docker Scan
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk container test ${{ secrets.ECR_URI }} || true
+        shell: bash
+  
+  apllication:
+    runs-on: ubuntu latest
+    needs: build-and-push
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Snyk Docker Scan
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk container test ${{ secrets.ECR_URI }}:${{ needs.build-and-push.outputs.image_tag }} || true
+        shell: bash
+
   update-task-definition:
     runs-on: ubuntu-latest
     needs: build-and-push
