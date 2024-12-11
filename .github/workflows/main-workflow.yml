@@ -67,16 +67,17 @@ jobs:
       - name: Get short commit hash
         id: get-commit
         run: |
-          hash=$(git rev-parse --short=5 HEAD)
-          echo "hash=$hash" >> $GITHUB_ENV
+          calculatedSha=$(git rev-parse --short "${{ github.sha }}")
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
       # 4. Executar o Snyk Scan no container
       - name: Snyk Docker Scan
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          REPOSITORY_URI: ${{ secrets.ECR_URI }}
         run: |
-          IMAGE_TAG=${{ needs.Register-Image.outputs.image_tag }}
-          snyk container test ${{ secrets.ECR_URI }}:$IMAGE_TAG
+          IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
+          snyk container test $REPOSITORY_URI:$IMAGE_TAG
 
   update-task-definition:
     runs-on: ubuntu-latest
