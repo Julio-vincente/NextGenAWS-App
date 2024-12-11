@@ -34,7 +34,7 @@ jobs:
           calculatedSha=$(git rev-parse --short "${{ github.sha }}")
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      # Build e push da imagem Docker
+      # Build e push da imagem Dockers
       - name: Build and push Docker image
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
