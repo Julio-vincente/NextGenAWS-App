@@ -31,26 +31,27 @@ jobs:
       - name: Get short commit hash
         id: get-commit
         run: |
-          echo "hash=$(git rev-parse --short=5 HEAD)" >> $GITHUB_ENV
+          calculatedSha=$(git rev-parse --short "${{ github.sha }}")
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      # 4. Build e push da imagem Docker
+      # Build e push da imagem Docker
       - name: Build and push Docker image
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
-          IMAGE_TAG: ${{ env.hash }}
           REPOSITORY_URI: ${{ secrets.ECR_URI }}
         run: |
           cd Docker
+          IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
           docker build -t $REPOSITORY_URI:$IMAGE_TAG .
           docker push $REPOSITORY_URI:$IMAGE_TAG
-          echo "::set-output name=image_tag::$IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
   Scan-Container:
     runs-on: ubuntu-latest
     needs: Register-Image
     steps:
 
-      # 1. Checkout mode
+      # 1. Checkout do código
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -60,18 +61,22 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           npm install -g snyk
-          snyk auth $SNYK_TOKEN
+          snyk auth "$SNYK_TOKEN"
 
-      - name: Debug Image Name
+      # 3. Obter o hash curto do commit
+      - name: Get short commit hash
+        id: get-commit
         run: |
-          echo "Image name: ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }}"        
+          hash=$(git rev-parse --short=5 HEAD)
+          echo "hash=$hash" >> $GITHUB_ENV
 
-      # 3. Executar o Snyk Scan
+      # 4. Executar o Snyk Scan no container
       - name: Snyk Docker Scan
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          snyk container test ${{ secrets.ECR_URI }}:${{ needs.Register-Image.outputs.image_tag }} 
+          IMAGE_TAG=${{ needs.Register-Image.outputs.image_tag }}
+          snyk container test ${{ secrets.ECR_URI }}:$IMAGE_TAG
 
   update-task-definition:
     runs-on: ubuntu-latest
