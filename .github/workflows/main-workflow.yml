@@ -45,7 +45,11 @@ jobs:
           docker push $REPOSITORY_URI:$IMAGE_TAG
           echo "image_tag=${IMAGE_TAG}" >> $GITHUB_ENV
 
-      # 5. Instalação do Snyk CLI
+  Scan-Container:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      # 1. Instalação do Snyk CLI
       - name: Install Snyk CLI
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -53,12 +57,12 @@ jobs:
           npm install -g snyk
           snyk auth $SNYK_TOKEN
 
-      # 6. Executar o Snyk Scan
+      # 2. Executar o Snyk Scan
       - name: Snyk Docker Scan
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          snyk container test ${{ secrets.ECR_URI }} || true
+          snyk container test ${{ secrets.ECR_URI }}:${{ needs.build-and-push.outputs.image_tag }} || true
         shell: bash
 
   application:
