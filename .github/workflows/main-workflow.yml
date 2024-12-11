@@ -62,12 +62,13 @@ jobs:
           npm install -g snyk
           snyk auth $SNYK_TOKEN
 
-      - name: Log in to Amazon ECR
-        env:
-          AWS_REGION: ${{ env.AWS_REGION }}
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        # 3. Login in AWS
+      # - name: Log in to Amazon ECR
+      #   env:
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #   run: |
+      #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
       # 4. Executar o Snyk Scan
       - name: Snyk Docker Scan
