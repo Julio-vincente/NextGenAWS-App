@@ -1,5 +1,5 @@
 {
-  "family": "service_app",
+  "family": "service",
   "containerDefinitions": [
     {
       "name": "ProdCluster",
