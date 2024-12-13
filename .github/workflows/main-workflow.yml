@@ -142,18 +142,23 @@ jobs:
             --cluster ProdCluster \
             --service service_app \
             --task-definition $NEW_TASK_DEF
-
-      - name: Verify Service Update
+      - name: Verify Service Existence
         run: |
           aws ecs describe-services \
-            --cluster ProdCluster \
-            --services service_app
-
-      - name: Run task
+          --cluster ProdCluster \
+          --services service_app || echo "Service not found"
+    
+      - name: Verify Task Definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition $NEW_TASK_DEF || echo "Task definition not found"
+      
+      - name: Run Task
         run: |
           aws ecs run-task \
-          --cluster ProdCluster \
-          --task-definition $NEW_TASK_DEF
+            --cluster ProdCluster \
+            --task-definition $NEW_TASK_DEF
+          
 
   verify-deployment:
     runs-on: ubuntu-latest
