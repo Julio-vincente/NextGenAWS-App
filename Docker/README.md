@@ -40,7 +40,7 @@ Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **P
 
 ---
 
-## 04 - Dockerfile
+# 04 - Dockerfile
 O **Dockerfile** define o ambiente da aplicação, incluindo dependências, diretórios e portas necessárias para execução. Ele permite que a aplicação seja facilmente empacotada e executada em qualquer ambiente que suporte contêineres. 
 
 ### Principais Configurações do Docker
