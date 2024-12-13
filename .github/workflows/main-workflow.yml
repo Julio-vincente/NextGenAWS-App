@@ -120,14 +120,10 @@ jobs:
           # Get the latest task definition ARN
           NEW_TASK_DEF=$(aws ecs list-task-definitions --family-prefix ProdCluster --sort DESC --query "taskDefinitionArns[0]" --output text)
           echo "New Task Definition ARN: $NEW_TASK_DEF"
-          
-          # Check if the ARN is empty or None
-          if [[ "$NEW_TASK_DEF" == "None" || -z "$NEW_TASK_DEF" ]]; then
-            echo "Error: No task definition found"
-            exit 1
-          fi
         
-
+          # Set the task definition ARN as output for subsequent steps
+          echo "NEW_TASK_DEF=$NEW_TASK_DEF" >> $GITHUB_ENV
+        
       - name: Update ECS Service
         run: |
           echo "Updating ECS service with task definition ARN: $NEW_TASK_DEF"
