@@ -88,7 +88,6 @@ jobs:
           IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
           snyk container test $REPOSITORY_URI:$IMAGE_TAG
 
-
   update-task-definition:
     runs-on: ubuntu-latest
     needs: Register-Image
@@ -97,31 +96,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 2. Testar presença do arquivo JSON
+      # 2. Verificar presença do arquivo JSON
       - name: Validate JSON File
         run: |
           echo "Verifying ecs-task-definition-template.json..."
-          ls -l ecs-task-definition-template.json
+          ls -l ecs-task-definition-template.json || exit 1
 
       # 3. Substituir placeholders no JSON
       - name: Update Task Definition JSON
         run: |
+          echo "Updating ECS Task Definition JSON..."
           sed -i "s|ECR_URI|${{ secrets.ECR_URI }}|g" ecs-task-definition-template.json
           sed -i "s|IMAGE_TAG|${{ needs.build-and-push.outputs.image_tag }}|g" ecs-task-definition-template.json
           sed -i "s|ECS_EXECUTION_ROLE_ARN|${{ secrets.ECS_EXECUTION_ROLE_ARN }}|g" ecs-task-definition-template.json
           sed -i "s|ECS_TASK_ROLE_ARN|${{ secrets.ECS_TASK_ROLE_ARN }}|g" ecs-task-definition-template.json
+
+          # Adicionar variáveis de ambiente
           sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_NAME\", \"value\": \"${{ secrets.DB_NAME }}\" }," ecs-task-definition-template.json
           sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_HOST\", \"value\": \"${{ secrets.DB_HOST }}\" }," ecs-task-definition-template.json
           sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_USER\", \"value\": \"${{ secrets.DB_USER }}\" }," ecs-task-definition-template.json
           sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_PASSWORD\", \"value\": \"${{ secrets.DB_PASSWORD }}\" }," ecs-task-definition-template.json
+
+          # Verificar JSON atualizado
+          cat ecs-task-definition-template.json
 
       # 4. Registrar nova Task Definition no ECS
       - name: Register Task Definition
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
+          echo "Registering ECS Task Definition..."
           aws ecs register-task-definition --cli-input-json file://ecs-task-definition-template.json --debug
 
       # 5. Atualizar o serviço no ECS
@@ -129,13 +135,17 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
           ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
         run: |
-          NEW_TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition task_app:2 --query "taskDefinition.taskDefinitionArn" --output text)
+          echo "Updating ECS Service..."
+          NEW_TASK_DEF_ARN=$(aws ecs describe-task-definition \
+            --task-definition ${ECS_SERVICE} --query "taskDefinition.taskDefinitionArn" --output text)
           echo "New Task Definition ARN: $NEW_TASK_DEF_ARN"
-          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $NEW_TASK_DEF_ARN --debug
+          aws ecs update-service --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --task-definition $NEW_TASK_DEF_ARN --debug
 
   verify-deployment:
     runs-on: ubuntu-latest
@@ -146,9 +156,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
           ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
         run: |
+          echo "Verifying ECS Service Deployment..."
           aws ecs wait services-stable --cluster $ECS_CLUSTER --services $ECS_SERVICE
           echo "Deployment successful!"
