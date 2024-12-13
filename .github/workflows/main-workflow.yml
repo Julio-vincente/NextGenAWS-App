@@ -88,6 +88,7 @@ jobs:
           IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
           snyk container test $REPOSITORY_URI:$IMAGE_TAG
 
+
   update-task-definition:
     runs-on: ubuntu-latest
     needs: Register-Image
@@ -106,34 +107,33 @@ jobs:
       - name: Update Task Definition JSON
         run: |
           sed -i "s|ECR_URI|${{ secrets.ECR_URI }}|g" ecs-task-definition-template.json
-          sed -i "s|IMAGE_TAG|${{ needs.Register-Image.outputs.image_tag }}|g" ecs-task-definition-template.json
+          sed -i "s|IMAGE_TAG|${{ needs.build-and-push.outputs.image_tag }}|g" ecs-task-definition-template.json
           sed -i "s|ECS_EXECUTION_ROLE_ARN|${{ secrets.ECS_EXECUTION_ROLE_ARN }}|g" ecs-task-definition-template.json
           sed -i "s|ECS_TASK_ROLE_ARN|${{ secrets.ECS_TASK_ROLE_ARN }}|g" ecs-task-definition-template.json
+          sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_NAME\", \"value\": \"${{ secrets.DB_NAME }}\" }," ecs-task-definition-template.json
+          sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_HOST\", \"value\": \"${{ secrets.DB_HOST }}\" }," ecs-task-definition-template.json
+          sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_USER\", \"value\": \"${{ secrets.DB_USER }}\" }," ecs-task-definition-template.json
+          sed -i -e "/\"environment\"/a \ \ \ \ { \"name\": \"DB_PASSWORD\", \"value\": \"${{ secrets.DB_PASSWORD }}\" }," ecs-task-definition-template.json
 
-      # 4. Login na AWS
-      - name: Login to Amazon
+      # 4. Registrar nova Task Definition no ECS
+      - name: Register Task Definition
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_REGION }}
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecs register-task-definition --cli-input-json file://ecs-task-definition-template.json --debug
 
-      # 5. Registrar nova Task Definition no ECS
-      - name: Register New Task Definition
-        env:
-          ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
-          AWS_REGION: ${{ env.AWS_REGION }}
-        run: |
-          aws ecs register-task-definition --cli-input-json file://ecs-task-definition-template.json
-
-      # 6. Atualizar o serviço no ECS
+      # 5. Atualizar o serviço no ECS
       - name: Update ECS Service
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_REGION }}
           ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
           ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
         run: |
-          NEW_TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-app-task --query "taskDefinition.taskDefinitionArn" --output text)
+          NEW_TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition task_app:2 --query "taskDefinition.taskDefinitionArn" --output text)
           echo "New Task Definition ARN: $NEW_TASK_DEF_ARN"
           aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $NEW_TASK_DEF_ARN --debug
 
@@ -144,6 +144,8 @@ jobs:
       # 1. Verificar estado do serviço no ECS
       - name: Verify ECS Deployment
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ env.AWS_REGION }}
           ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
           ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
