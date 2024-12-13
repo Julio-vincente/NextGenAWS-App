@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "service_app",
-        "image": "ECR_URI:NEW_IMAGE_TAG",
+        "image": "${ECR_URI}:${NEW_IMAGE_TAG}",
         "memory": 512,
         "cpu": 256,
         "essential": true,
