@@ -103,22 +103,30 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Replace environment variables in task definition
-        run: |
-          echo "Replacing environment variables in task definition..."
-          sed -i "s|\${DB_NAME}|${{ secrets.DB_NAME }}|g" ecs/task-definition.json
-          sed -i "s|\${DB_HOST}|${{ secrets.DB_HOST }}|g" ecs/task-definition.json
-          sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" ecs/task-definition.json
-          sed -i "s|\${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g" ecs/task-definition.json
-
+          - name: Replace environment variables in task definition
+          run: |
+            echo "Replacing environment variables in task definition..."
+            sed -i "s|\${DB_NAME}|${{ secrets.DB_NAME }}|g" ecs/task-definition.json
+            sed -i "s|\${DB_HOST}|${{ secrets.DB_HOST }}|g" ecs/task-definition.json
+            sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" ecs/task-definition.json
+            sed -i "s|\${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g" ecs/task-definition.json
+  
       - name: Register Task Definition
         run: |
           aws ecs register-task-definition --cli-input-json file://ecs/task-definition.json
 
+      - name: Get the Latest Task Definition ARN
+        run: |
+          NEW_TASK_DEF=$(aws ecs describe-task-definitions --family-prefix ProdCluster --query "taskDefinitionArns[0]" --output text)
+          echo "New Task Definition ARN: $NEW_TASK_DEF"
+          if [[ "$NEW_TASK_DEF" == "None" || -z "$NEW_TASK_DEF" ]]; then
+            echo "Error: No task definition found"
+            exit 1
+          fi
+
       - name: Update ECS Service
         run: |
-          NEW_TASK_DEF=$(aws ecs describe-task-definition --family-prefix ProdCluster --query "taskDefinitionArns[0]" --output text)
-          echo "Updating ECS service with new task definition: $NEW_TASK_DEF"
+          echo "Updating ECS service with task definition ARN: $NEW_TASK_DEF"
           aws ecs update-service \
             --cluster ProdCluster \
             --service my-service \
