@@ -2,7 +2,7 @@
     "family": "ProdCluster",
     "containerDefinitions": [
       {
-        "name": "service_app",
+        "name": "sleep360",
         "image": "${ECR_URI}:${NEW_IMAGE_TAG}",
         "memory": 512,
         "cpu": 256,
@@ -46,6 +46,6 @@
     "requiresCompatibilities": ["FARGATE"],
     "cpu": "256",
     "memory": "512",
-    "executionRoleArn": "ECS_EXECUTION_ROLE_ARN",
-    "taskRoleArn": "ECS_TASK_ROLE_ARN"
+    "executionRoleArn": "${ECS_EXECUTION_ROLE_ARN}",
+    "taskRoleArn": "${ECS_TASK_ROLE_ARN}"
   }

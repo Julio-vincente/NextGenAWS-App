@@ -119,7 +119,9 @@ jobs:
           sed -i "s|\${DB_HOST}|${{ secrets.DB_HOST }}|g" ecs/task-definition.json
           sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" ecs/task-definition.json
           sed -i "s|\${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g" ecs/task-definition.json
-  
+          sed -i "s|\${ECS_EXECUTION_ROLE_ARN}|${{ secrets.ECS_EXECUTION_ROLE_ARN }}|g" ecs/task-definition.json
+          sed -i "s|\${ECS_TASK_ROLE_ARN}|${{ secrets.ECS_TASK_ROLE_ARN }}|g" ecs/task-definition.json
+
       - name: Register Task Definition
         run: |
           aws ecs register-task-definition --cli-input-json file://ecs/task-definition.json
@@ -132,7 +134,7 @@ jobs:
         
           # Set the task definition ARN as output for subsequent steps
           echo "NEW_TASK_DEF=$NEW_TASK_DEF" >> $GITHUB_ENV
-        
+       
       - name: Update ECS Service
         run: |
           echo "Updating ECS service with task definition ARN: $NEW_TASK_DEF"
@@ -145,7 +147,13 @@ jobs:
         run: |
           aws ecs describe-services \
             --cluster ProdCluster \
-            --services my-service
+            --services service_app
+
+      - name: Run task
+        run: |
+          aws ecs run-task \
+          --cluster ProdCluster \
+          --task-definition $NEW_TASK_DEF
 
   verify-deployment:
     runs-on: ubuntu-latest
