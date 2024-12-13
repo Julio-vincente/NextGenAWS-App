@@ -1,18 +1,31 @@
 # Documentação da Aplicação e Dockerfile
 
-## Índice
-- [Documentação da Aplicação e Dockerfile](#documentação-da-aplicação-e-dockerfile)
-  - [Índice](#índice)
-  - [Visão Geral da Aplicação](#visão-geral-da-aplicação)
-    - [Principais Tecnologias](#principais-tecnologias)
-    - [Funcionalidades](#funcionalidades)
-  - [Dockerfile](#dockerfile)
-    - [Principais Configurações do Docker](#principais-configurações-do-docker)
+<p align="center">
+  <img src="https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=green" width="130">
+  <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" width="80">
+  <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" width="60">
+  <img src="https://img.shields.io/badge/docker-%232496ED.svg?style=for-the-badge&logo=docker&logoColor=white" width="80">
+  <img src="https://img.shields.io/badge/Flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white" width="80">
+  <img src="https://img.shields.io/badge/Python-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white" width="80">
+</p>
 
----
+## Índice
+* [01 - Visão Geral da Aplicação](#01---visão-geral-da-aplicação)
+* [02 - Principais Tecnologias](#02---principais-tecnologias)
+* [03 - Funcionalidades](#03---funcionalidades)
+* [04 - Dockerfile](#04---dockerfile)
+* [05 - Topologia](#05---topologia)
+
+## Sobre os Integrantes 
+| Nome | GitHub | Escola |
+| ---| ---| ---|
+|Julio Vicente|https://github.com/Julio-vincente|SENAI de Informática - 1.34
+|Flavio Martins|https://github.com/Flaviomartinx|SENAI de Informática - 1.34
+|Guilherme de Oliveira|https://github.com/GuiROC1|SENAI de Informática - 1.34
+|Maria|https://github.com/FernandodOFy|SENAI de Informática - 1.34
 
 ## Visão Geral da Aplicação
-Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, e **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores**.
+Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores** dentro de dois endpoints, nos utilizamos uma bliblioteca para criar variaveis dentro da nossa aplicação para garantir um ambiente protegido e não expor seu **banco de dados** dentro da aplicação, com Flask nos criamos dois **endpoints** para buscar duas tabelas dentro do banco de dados e retornar elas.
 
 ### Principais Tecnologias
 - **Flask**: Utilizado para gerenciar rotas e endpoints.
