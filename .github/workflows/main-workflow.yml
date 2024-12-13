@@ -90,6 +90,7 @@ jobs:
 
   update-ecs:
     runs-on: ubuntu-latest
+    needs: Register-Image
 
     steps:
       - name: Checkout code
