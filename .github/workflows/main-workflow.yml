@@ -118,7 +118,7 @@ jobs:
       - name: Get the Latest Task Definition ARN
         run: |
           # Get the latest task definition ARN
-          NEW_TASK_DEF=$(aws ecs list-task-definition --family-prefix ProdCluster --sort DESC --query "taskDefinitionArns[0]" --output text)
+          NEW_TASK_DEF=$(aws ecs list-task-definitions --family-prefix ProdCluster --sort DESC --query "taskDefinitionArns[0]" --output text)
           echo "New Task Definition ARN: $NEW_TASK_DEF"
           
           # Check if the ARN is empty or None
