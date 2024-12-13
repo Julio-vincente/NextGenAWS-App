@@ -17,41 +17,44 @@
 * [05 - Topologia](#05---topologia)
 
 ## Sobre os Integrantes 
-| Nome | GitHub | Escola |
+| Nome | GitHub | Social |
 | ---| ---| ---|
-|Julio Vicente|https://github.com/Julio-vincente|SENAI de Informática - 1.34
-|Flavio Martins|https://github.com/Flaviomartinx|SENAI de Informática - 1.34
-|Guilherme de Oliveira|https://github.com/GuiROC1|SENAI de Informática - 1.34
-|Maria|https://github.com/FernandodOFy|SENAI de Informática - 1.34
+|Julio Vicente | https://github.com/Julio-vincente | https://www.linkedin.com/in/julio-vicente-b08239276/
+|Flavio Martins | https://github.com/Flaviomartinx | https://www.linkedin.com/in/flavio-martins-mendes
+|Guilherme do Carmo | https://github.com/GuiROC1 | https://www.linkedin.com/in/guilherme-r-carmo/
+|Maria Oliveira |  | https://www.linkedin.com/in/maria-oliveiraa67
 
-## Visão Geral da Aplicação
+# 01 - Visão Geral da Aplicação
 Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores** dentro de dois endpoints, nos utilizamos uma bliblioteca para criar variaveis dentro da nossa aplicação para garantir um ambiente protegido e não expor seu **banco de dados** dentro da aplicação, com Flask nos criamos dois **endpoints** para buscar duas tabelas dentro do banco de dados e retornar elas.
 
-### Principais Tecnologias
+# 02 - Principais Tecnologias
 - **Flask**: Utilizado para gerenciar rotas e endpoints.
 - **Pymysql**: Biblioteca utilizada para conectar ao banco de dados.
 - **MySQL (RDS)**: Banco de dados que armazena as informações da aplicação.
 - **Variáveis de Ambiente**: Garantem segurança nas credenciais e configurações sensíveis.
 
-### Funcionalidades
+# 03 - Funcionalidades
 1. **Endpoint de Livros**: Retorna os registros armazenados na tabela de livros.
 2. **Endpoint de Autores**: Retorna os registros da tabela de autores.
 3. **Conexão Segura ao Banco**: Configurada para evitar exposição de credenciais.
 
 ---
 
-## Dockerfile
+## 04 - Dockerfile
 O **Dockerfile** define o ambiente da aplicação, incluindo dependências, diretórios e portas necessárias para execução. Ele permite que a aplicação seja facilmente empacotada e executada em qualquer ambiente que suporte contêineres. 
 
 ### Principais Configurações do Docker
 - **Imagem Base**: Uma versão otimizada do Python para aplicativos Flask.
-  ```
+  ```Dockerfile
   FROM python:3.11-alpine
   ```
-- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt`.
+- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt` com blibliotecas como **Flask**, **pymysql**, **gnunicorn**.
 - **Porta Exposta**: A aplicação é configurada para escutar na porta 80 internamente.
-- **Variáveis de Ambiente**: Utilizadas para definir a porta e o host da aplicação.
+  ```Dockerfile
+  EXPOSE 80
   ```
+- **Variáveis de Ambiente**: Utilizadas para definir a porta e o host da aplicação.
+  ```Dockerfile
   ENV FLASK_APP=app:app
   ENV FLASK_RUN_HOST=0.0.0.0
   ENV FLASK_RUN_PORT=80
