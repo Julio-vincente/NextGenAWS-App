@@ -111,14 +111,14 @@ jobs:
 
       - name: Replace environment variables in task definition
         run: |
-            echo "Replacing environment variables in task definition..."
-            IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
-            sed -i "s|\${ECR_URI}|${{ secrets.ECR_URI }}|g" ecs/task-definition.json
-            sed -i "s|\${NEW_IMAGE_TAG}|${{ secrets.ECR_URI }}|g" ecs/task-definition.json
-            sed -i "s|\${DB_NAME}|${{ secrets.DB_NAME }}|g" ecs/task-definition.json
-            sed -i "s|\${DB_HOST}|${{ secrets.DB_HOST }}|g" ecs/task-definition.json
-            sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" ecs/task-definition.json
-            sed -i "s|\${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g" ecs/task-definition.json
+          echo "Replacing environment variables in task definition..."
+          IMAGE_TAG=${COMMIT_SHORT_SHA:-dev}
+          sed -i "s|\${ECR_URI}|${{ secrets.ECR_URI }}|g" ecs/task-definition.json
+          sed -i "s|\${NEW_IMAGE_TAG}|${IMAGE_TAG}|g" ecs/task-definition.json
+          sed -i "s|\${DB_NAME}|${{ secrets.DB_NAME }}|g" ecs/task-definition.json
+          sed -i "s|\${DB_HOST}|${{ secrets.DB_HOST }}|g" ecs/task-definition.json
+          sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" ecs/task-definition.json
+          sed -i "s|\${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g" ecs/task-definition.json
   
       - name: Register Task Definition
         run: |
