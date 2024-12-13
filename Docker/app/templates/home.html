@@ -1,17 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Library Home</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
-<body>
-    <h1>Welcome to the Library</h1>
+
+<header>
+    <h1>Library</h1>
     <nav>
-        <a href="/">Home</a> |
-        <a href="/books">Books</a> |
-        <a href="/authors">Authors</a>
+        <button onclick="window.location.href='/books';"> Books  </button>
+        <button onclick="window.location.href='/authors';"> Authors </button>
     </nav>
-    <p>This is a simple library management system.</p>
+</header>
+
+<body>
+    <p>This is a simple library manaement system.</p>
 </body>
+
 </html>

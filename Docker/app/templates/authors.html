@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Authors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/author.css') }}">
 </head>
+<header>
+    <button onclick="window.location.href='/';"> Home </button>
+    <button onclick="window.location.href='/books';"> Books  </button>
+    <button onclick="window.location.href='/authors';"> Authors </button>
+</header>
 <body>
     <h1>Authors List</h1>
     <nav>
