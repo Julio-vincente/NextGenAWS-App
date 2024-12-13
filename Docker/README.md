@@ -14,6 +14,8 @@
 * [02 - Principais Tecnologias](#02---principais-tecnologias)
 * [03 - Funcionalidades](#03---funcionalidades)
 * [04 - Dockerfile](#04---dockerfile)
+* [04 - Como utilizar](#04---como-utilizar)
+
 
 ## Sobre os Integrantes 
 | Nome | GitHub | Social |
@@ -24,7 +26,7 @@
 |Maria Oliveira |  | https://www.linkedin.com/in/maria-oliveiraa67
 
 # 01 - Visão Geral da Aplicação
-Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores** dentro de dois endpoints, nos utilizamos uma bliblioteca para criar variaveis dentro da nossa aplicação para garantir um ambiente protegido e não expor seu **banco de dados** dentro da aplicação, com Flask nos criamos dois **endpoints** para buscar duas tabelas dentro do banco de dados e retornar elas.
+Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores** dentro de dois endpoints, nos utilizamos uma biblioteca para criar variaveis dentro da nossa aplicação para garantir um ambiente protegido e não expor seu **banco de dados** dentro da aplicação, com Flask nos criamos dois **endpoints** para buscar duas tabelas dentro do banco de dados e retornar elas.
 
 # 02 - Principais Tecnologias
 - **Flask**: Utilizado para gerenciar rotas e endpoints.
@@ -46,7 +48,7 @@ O **Dockerfile** define o ambiente da aplicação, incluindo dependências, dire
   ```Dockerfile
   FROM python:3.11-alpine
   ```
-- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt` com blibliotecas como **Flask**, **pymysql**, **gnunicorn**.
+- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt` com bibliotecas como **Flask**, **pymysql**, **gnunicorn**.
 - **Porta Exposta**: A aplicação é configurada para escutar na porta 80 internamente.
   ```Dockerfile
   EXPOSE 80
@@ -58,3 +60,14 @@ O **Dockerfile** define o ambiente da aplicação, incluindo dependências, dire
   ENV FLASK_RUN_PORT=80
   ```
 - **Segurança do Contêiner**: Uso de imagem leve e análise de vulnerabilidades com ferramentas como **Snyk**.
+
+# 05 - Como Utilizar
+
+Para replicar o Dockerfile, será necessário copiar a pasta **Docker** inteira. Não será preciso baixar nenhuma biblioteca em sua máquina, apenas ter acesso a um repositório de **imagens Docker**. 
+
+Se for testar localmente, utilize os seguintes comandos:
+
+```shell
+docker build -t teste .
+docker run -p 80:80 teste
+```
