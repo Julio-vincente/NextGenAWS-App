@@ -117,7 +117,7 @@ jobs:
 
       - name: Get the Latest Task Definition ARN
         run: |
-          NEW_TASK_DEF=$(aws ecs describe-task-definitions --family-prefix ProdCluster --query "taskDefinitionArns[0]" --output text)
+          NEW_TASK_DEF=$(aws ecs describe-task-definition --family-prefix ProdCluster --query "taskDefinitionArns[0]" --output text)
           echo "New Task Definition ARN: $NEW_TASK_DEF"
           if [[ "$NEW_TASK_DEF" == "None" || -z "$NEW_TASK_DEF" ]]; then
             echo "Error: No task definition found"
