@@ -14,7 +14,6 @@
 * [02 - Principais Tecnologias](#02---principais-tecnologias)
 * [03 - Funcionalidades](#03---funcionalidades)
 * [04 - Dockerfile](#04---dockerfile)
-* [05 - Topologia](#05---topologia)
 
 ## Sobre os Integrantes 
 | Nome | GitHub | Social |
@@ -30,15 +29,14 @@ Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **P
 # 02 - Principais Tecnologias
 - **Flask**: Utilizado para gerenciar rotas e endpoints.
 - **Pymysql**: Biblioteca utilizada para conectar ao banco de dados.
-- **MySQL (RDS)**: Banco de dados que armazena as informações da aplicação.
+- **MySQL (RDS)**: Banco de dados que armazena as informações da aplicação dentro da AWS.
 - **Variáveis de Ambiente**: Garantem segurança nas credenciais e configurações sensíveis.
+- **Gunicorn**: Servidor WSGI utilizado para rodar a aplicação Flask de forma eficiente em produção.
 
 # 03 - Funcionalidades
 1. **Endpoint de Livros**: Retorna os registros armazenados na tabela de livros.
 2. **Endpoint de Autores**: Retorna os registros da tabela de autores.
 3. **Conexão Segura ao Banco**: Configurada para evitar exposição de credenciais.
-
----
 
 # 04 - Dockerfile
 O **Dockerfile** define o ambiente da aplicação, incluindo dependências, diretórios e portas necessárias para execução. Ele permite que a aplicação seja facilmente empacotada e executada em qualquer ambiente que suporte contêineres. 
