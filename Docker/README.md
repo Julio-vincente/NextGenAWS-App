@@ -14,8 +14,7 @@
 * [02 - Principais Tecnologias](#02---principais-tecnologias)
 * [03 - Funcionalidades](#03---funcionalidades)
 * [04 - Dockerfile](#04---dockerfile)
-* [04 - Como utilizar](#04---como-utilizar)
-
+* [05 - Como Utilizar](#05---como-utilizar)
 
 ## Sobre os Integrantes 
 | Nome | GitHub | Social |
