@@ -14,97 +14,112 @@
 * [02 - Principais Tecnologias](#02---principais-tecnologias)
 * [03 - Funcionalidades](#03---funcionalidades)
 * [04 - Dockerfile](#04---dockerfile)
-* [05 - Como utilizar a aplicação](#05---como-utilizar-a-aplicação)
+* [05 - Como Utilizar a Aplicação](#05---como-utilizar-a-aplicação)
+* [06 - Visão Geral da Automação](#06---visão-geral-da-automação)
+* [07 - Jobs da Automação](#07---jobs-da-automação)
+* [08 - Configurações Básicas](#08---configurações-básicas)
+* [09 - Secrets](#09---secrets)
 
 ## Sobre os Integrantes 
 | Nome | GitHub | Social |
 | ---| ---| ---|
-|Julio Vicente | https://github.com/Julio-vincente | https://www.linkedin.com/in/julio-vicente-b08239276/
-|Flavio Martins | https://github.com/Flaviomartinx | https://www.linkedin.com/in/flavio-martins-mendes
-|Guilherme do Carmo | https://github.com/GuiROC1 | https://www.linkedin.com/in/guilherme-r-carmo/
-|Maria Oliveira |  | https://www.linkedin.com/in/maria-oliveiraa67
+| Julio Vicente | [GitHub](https://github.com/Julio-vincente) | [LinkedIn](https://www.linkedin.com/in/julio-vicente-b08239276/) |
+| Flavio Martins | [GitHub](https://github.com/Flaviomartinx) | [LinkedIn](https://www.linkedin.com/in/flavio-martins-mendes) |
+| Guilherme do Carmo | [GitHub](https://github.com/GuiROC1) | [LinkedIn](https://www.linkedin.com/in/guilherme-r-carmo/) |
+| Maria Oliveira | - | [LinkedIn](https://www.linkedin.com/in/maria-oliveiraa67) |
 
-# 01 - Visão Geral da Aplicação
-Esta aplicação é desenvolvida em **Python** usando o framework **Flask**, **Pymysql**, **OS**, **logging**. Seu objetivo é conectar a um banco de dados relacional hospedado na AWS e expor dados de duas tabelas: **livros** e **autores** dentro de dois endpoints, nos utilizamos uma biblioteca para criar variaveis dentro da nossa aplicação para garantir um ambiente protegido e não expor seu **banco de dados** dentro da aplicação, com Flask nos criamos dois **endpoints** para buscar duas tabelas dentro do banco de dados e retornar elas.
+## 01 - Visão Geral da Aplicação
+Esta aplicação foi desenvolvida em **Python** utilizando o framework **Flask** e a biblioteca **Pymysql** para se conectar a um banco de dados relacional hospedado na AWS. A aplicação expõe dados de duas tabelas: **livros** e **autores**, acessíveis por dois endpoints. Para garantir segurança, usamos variáveis de ambiente que evitam a exposição de credenciais diretamente no código.
 
-# 02 - Principais Tecnologias
-- **Flask**: Utilizado para gerenciar rotas e endpoints.
-- **Pymysql**: Biblioteca utilizada para conectar ao banco de dados.
-- **MySQL (RDS)**: Banco de dados que armazena as informações da aplicação dentro da AWS.
-- **Variáveis de Ambiente**: Garantem segurança nas credenciais e configurações sensíveis.
-- **Gunicorn**: Servidor WSGI utilizado para rodar a aplicação Flask de forma eficiente em produção.
+## 02 - Principais Tecnologias
+- **Flask**: Framework utilizado para gerenciar as rotas e endpoints.
+- **Pymysql**: Biblioteca que permite a conexão com o banco de dados MySQL.
+- **MySQL (RDS)**: Banco de dados utilizado para armazenar as informações da aplicação na AWS.
+- **Variáveis de Ambiente**: Usadas para garantir a segurança das credenciais e configurações sensíveis.
+- **Gunicorn**: Servidor WSGI para execução da aplicação Flask em produção.
 
-# 03 - Funcionalidades
-1. **Endpoint de Livros**: Retorna os registros armazenados na tabela de livros.
+## 03 - Funcionalidades
+1. **Endpoint de Livros**: Retorna os registros da tabela de livros.
 2. **Endpoint de Autores**: Retorna os registros da tabela de autores.
-3. **Conexão Segura ao Banco**: Configurada para evitar exposição de credenciais.
+3. **Conexão Segura ao Banco**: Utiliza variáveis de ambiente para manter as credenciais protegidas.
 
-# 04 - Dockerfile
-O **Dockerfile** define o ambiente da aplicação, incluindo dependências, diretórios e portas necessárias para execução. Ele permite que a aplicação seja facilmente empacotada e executada em qualquer ambiente que suporte contêineres. 
+## 04 - Dockerfile
+O **Dockerfile** configura o ambiente necessário para rodar a aplicação, incluindo as dependências, diretórios e portas necessárias.
 
 ### Principais Configurações do Docker
-- **Imagem Base**: Uma versão otimizada do Python para aplicativos Flask.
-  ```Dockerfile
+- **Imagem Base**: Utiliza uma versão otimizada do Python para aplicativos Flask.
+  ```dockerfile
   FROM python:3.11-alpine
   ```
-- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt` com bibliotecas como **Flask**, **pymysql**, **gnunicorn**.
-- **Porta Exposta**: A aplicação é configurada para escutar na porta 80 internamente.
-  ```Dockerfile
+- **Instalação de Dependências**: Automatizada a partir de um arquivo `requirements.txt`.
+- **Porta Exposta**: Configura a aplicação para escutar na porta 80 internamente.
+  ```dockerfile
   EXPOSE 80
   ```
-- **Variáveis de Ambiente**: Utilizadas para definir a porta e o host da aplicação.
-  ```Dockerfile
+- **Variáveis de Ambiente**: Definem a porta e o host da aplicação.
+  ```dockerfile
   ENV FLASK_APP=app:app
   ENV FLASK_RUN_HOST=0.0.0.0
   ENV FLASK_RUN_PORT=80
   ```
-- **Segurança do Contêiner**: Uso de imagem leve e análise de vulnerabilidades com ferramentas como **Snyk**.
+- **Segurança do Contêiner**: A imagem base é leve, e ferramentas como **Snyk** podem ser usadas para análise de vulnerabilidades.
 
-# 05 - Como utilizar a aplicação
-Para replicar o Dockerfile, será necessário copiar a pasta **Docker** inteira. Não será preciso baixar nenhuma biblioteca em sua máquina, apenas ter acesso a um repositório de **imagens Docker** e configurar as variaveis de **ambiente dentro do RDS**. 
+## 05 - Como Utilizar a Aplicação
+Para replicar a configuração, basta copiar a pasta **Docker** e configurar as variáveis de ambiente dentro do RDS. Caso deseje testar localmente, execute os seguintes comandos:
 
-Se for testar localmente, utilize os seguintes comandos:
-
-```shell
+```bash
 docker build -t teste .
 docker run -p 80:80 teste
 ```
 
-# 06 - Visão Geral da Automação
-A automação foi desenvolvida para eliminar a necessidade de registrar manualmente as imagens do Dockerfile. Ela realiza automaticamente o registro das imagens no repositório **ECR** da **AWS**. Além disso, cada nova imagem gerada recebe automaticamente uma tag contendo os cinco primeiros caracteres do último commit no GitHub. A automação também atualiza o serviço no **ECS**, garantindo que o ambiente seja atualizado de forma dinâmica e eficiente.
+## 06 - Visão Geral da Automação
+A automação elimina a necessidade de registrar manualmente as imagens do Dockerfile. Ela realiza o registro automático das imagens no **ECR** da AWS, atribuindo uma tag com os cinco primeiros caracteres do último commit no GitHub. Além disso, a automação atualiza automaticamente o serviço no **ECS**.
 
-# 07 - Jobs da Automação
-A automação conta com quatro jobs principais que garantem o funcionamento e a confiabilidade do processo:
+## 07 - Jobs da Automação
+A automação é composta por quatro jobs principais:
+1. **Register-Images**: Registra as imagens do **Dockerfile** no **ECR**.
+2. **Scan-Container**: Realiza uma análise de segurança no container usando o **Snyk**.
+3. **Update-ECS**: Atualiza o serviço no **ECS** com a nova imagem.
+4. **Verify-Deployment**: Valida se o container está funcionando corretamente no ECS.
 
-- **Register-Images**: Registra as imagens do **Dockerfile** no **ECR** da AWS como repositório centralizado.
-- **Scan-Container**: Realiza uma análise de segurança no container utilizando a ferramenta **Snyk**, para identificar e prevenir vulnerabilidades.
-- **Update-ECS**: Atualiza o serviço no **ECS** utilizando a imagem registrada pelo primeiro job, garantindo que o ambiente reflita a nova versão.
-- **Verify-Deployment**: Valida se o container está funcionando corretamente no ECS, verificando sua integridade e disponibilidade.
-
-# 08 - Configurações Básicas
-Para utilizar a automação, é necessário configurar previamente um ambiente na AWS, incluindo o ECS, ECR e permissões adequadas para execução. A automação requer:
+## 08 - Configurações Básicas
+Antes de utilizar a automação, configure um ambiente na AWS com ECS, ECR e permissões adequadas. A automação requer as seguintes configurações:
 
 1. **ECS**: Um cluster configurado para hospedar os serviços.
-2. **ECR**: Um repositório para armazenar as imagens Docker.
-3. **IAM Roles**: Permissões adequadas para execução dos jobs.
-4. **Snyk**: Sera necessario uma conta dentro da plataforma `Snyk` para se configurar uma das variaveis de ambiente.
+2. **ECR**: Repositório para armazenar as imagens Docker.
+3. **IAM Roles**: Permissões adequadas para os jobs.
+4. **Snyk**: Conta na plataforma **Snyk** para configurar a variável de ambiente.
 
-Aqui em baixo vai estar as variaveis necessarias para conseguir utilizar a automação
-  ```text    
-  AWS_ACCESS_KEY_ID = Chave access dentro da sua conta da AWS
-  AWS_REGION = Região que sua conta se encontra
-  AWS_SECRET_ACCESS_KEY = Chave secret dentro da sua conta da AWS
-  ECR_URI = URI do seu repositorio ECR
-  SNYK_TOKEN
-  DB_NAME
-  DB_HOST
-  DB_USER
-  DB_PASSWORD
-  ECS_CLUSTER
-  ECS_SERVICE
-  ECS_EXECUTION_ROLE_ARN
-  ```
+### Variáveis de Ambiente Necessárias
+```text
+AWS_ACCESS_KEY_ID = <Sua chave de acesso AWS>
+AWS_REGION = <Região da sua conta AWS>
+AWS_SECRET_ACCESS_KEY = <Sua chave secreta AWS>
+ECR_URI = <URI do repositório ECR>
+SNYK_TOKEN = <Token do Snyk>
+DB_NAME = <Nome do banco de dados>
+DB_HOST = <Host do banco de dados>
+DB_USER = <Usuário do banco de dados>
+DB_PASSWORD = <Senha do banco de dados>
+ECS_CLUSTER = <Nome do cluster ECS>
+ECS_SERVICE = <Nome do serviço ECS>
+ECS_EXECUTION_ROLE_ARN = <ARN da role de execução ECS>
+SECURITY_GROUPS = <ID do seu grupo de segurança usado no ECS>
+SUBNETS = <IDs das subnets publicas utilizadas no ECS>
+```
 
-## Secrets 
-Dentro do seu repositorio vamos ter que configurar alguma Secrets para tornar essa workflow acessivel
-AFHJDOFHASKDFajfdskljasdfagjkaslkfadsf
+## 09 - Secrets
+Para tornar a automação acessível no GitHub Actions, configure as seguintes **Secrets** no seu repositório:
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `ECR_URI`
+- `SNYK_TOKEN`
+- `DB_NAME`
+- `DB_HOST`
+- `DB_USER`
+- `DB_PASSWORD`
+- `ECS_CLUSTER`
+- `ECS_SERVICE`
+- `ECS_EXECUTION_ROLE_ARN`
+- `SECURITY_GROUPS`
+- `SUBNETS`
