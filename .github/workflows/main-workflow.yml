@@ -148,7 +148,22 @@ jobs:
           aws ecs describe-services \
             --cluster ProdCluster \
             --services ProdCluster
-          
+      
+      - name: Update Task
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+        run: |
+          aws ecs run-task \
+            --cluster ProdCluster \
+            --task-definition $NEW_TASK_DEF \
+            --launch-type "FARGATE" \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ secrets.SUBNETS }}],securityGroups=[${{ secrets.SECURITY_GROUPS }}],assignPublicIp=ENABLED}" \
+            --overrides '{
+              "containerOverrides": [],
+              "taskRoleArn": "arn:aws:iam::123456789012:role/TaskRole",
+              "executionRoleArn": "arn:aws:iam::123456789012:role/ExecutionRole"
+            }'
+      
   verify-deployment:
     runs-on: ubuntu-latest
     needs: update-ecs
