@@ -160,8 +160,8 @@ jobs:
             --network-configuration "awsvpcConfiguration={subnets=[${{ secrets.SUBNETS }}],securityGroups=[${{ secrets.SECURITY_GROUPS }}],assignPublicIp=ENABLED}" \
             --overrides '{
               "containerOverrides": [],
-              "taskRoleArn": "arn:aws:iam::123456789012:role/TaskRole",
-              "executionRoleArn": "arn:aws:iam::123456789012:role/ExecutionRole"
+              "taskRoleArn": "${{ secrets.ECS_EXECUTION_ROLE_ARN }}",
+              "executionRoleArn": "${{ secrets.ECS_TASK_ROLE_ARN }}"
             }'
       
   verify-deployment:
