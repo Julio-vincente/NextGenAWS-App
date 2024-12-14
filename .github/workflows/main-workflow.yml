@@ -140,14 +140,14 @@ jobs:
           echo "Updating ECS service with task definition ARN: $NEW_TASK_DEF"
           aws ecs update-service \
             --cluster ProdCluster \
-            --service service_app \
+            --service ProdCluster \
             --task-definition $NEW_TASK_DEF
 
       - name: Verify Service Update
         run: |
           aws ecs describe-services \
             --cluster ProdCluster \
-            --services service_app
+            --services ProdCluster
 
       - name: Run task
         run: |
