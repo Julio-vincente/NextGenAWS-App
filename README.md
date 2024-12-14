@@ -94,7 +94,7 @@ Aqui em baixo vai estar as variaveis necessarias para conseguir utilizar a autom
   AWS_ACCESS_KEY_ID = Chave access dentro da sua conta da AWS
   AWS_REGION = Região que sua conta se encontra
   AWS_SECRET_ACCESS_KEY = Chave secret dentro da sua conta da AWS
-  ECR_URI = URI do seu 
+  ECR_URI = URI do seu repositorio ECR
   SNYK_TOKEN
   DB_NAME
   DB_HOST
