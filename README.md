@@ -91,10 +91,10 @@ Para utilizar a automação, é necessário configurar previamente um ambiente n
 
 Aqui em baixo vai estar as variaveis necessarias para conseguir utilizar a automação
   ```text    
-  AWS_ACCESS_KEY_ID = Acess Key dentro da sua conta da AWS
+  AWS_ACCESS_KEY_ID = Chave access dentro da sua conta da AWS
   AWS_REGION = Região que sua conta se encontra
-  AWS_SECRET_ACCESS_KEY
-  ECR_URI
+  AWS_SECRET_ACCESS_KEY = Chave secret dentro da sua conta da AWS
+  ECR_URI = URI do seu 
   SNYK_TOKEN
   DB_NAME
   DB_HOST

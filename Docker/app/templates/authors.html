@@ -1,27 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authors</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/author.css') }}">
 </head>
-<header>
-    <button onclick="window.location.href='/';"> Home </button>
-    <button onclick="window.location.href='/books';"> Books  </button>
-    <button onclick="window.location.href='/authors';"> Authors </button>
-</header>
+
 <body>
-    <h1>Authors List</h1>
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/books">Books</a> |
-        <a href="/authors">Authors</a>
-    </nav>
-    <ul>
-        {% for author in authors %}
-            <li>{{ author[1] }}</li>
-        {% endfor %}
-    </ul>
+    <header>
+        <nav>
+            <button onclick="window.location.href='/';">Home</button>
+            <button onclick="window.location.href='/books';">Books</button>
+            <button onclick="window.location.href='/authors';">Authors</button>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Authors List</h1>
+        <section>
+            <ul>
+                {% for author in authors %}
+                    <li>{{ author[1] }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Optionally, add footer content here -->
+    </footer>
 </body>
+
 </html>

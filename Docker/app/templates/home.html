@@ -3,21 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Home</title>
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 
-<header>
-    <h1>Library</h1>
-    <nav>
-        <button onclick="window.location.href='/books';"> Books  </button>
-        <button onclick="window.location.href='/authors';"> Authors </button>
-    </nav>
-</header>
-
 <body>
-    <p>This is a simple library manaement system.</p>
+    <header>
+        <h1>Library</h1>
+        <nav>
+            <button onclick="window.location.href='/books';">Books</button>
+            <button onclick="window.location.href='/authors';">Authors</button>
+        </nav>
+    </header>
+
+    <main>
+        <p>Welcome to our simple library management system. Explore books and authors using the navigation buttons above.</p>
+    </main>
 </body>
 
 </html>

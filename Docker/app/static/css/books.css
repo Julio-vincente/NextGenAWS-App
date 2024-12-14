@@ -1,0 +1,100 @@
+/* Reset básico para padronizar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    line-height: 1.6;
+}
+
+/* Estilização do cabeçalho */
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+nav {
+    margin-top: 1rem;
+}
+
+nav button {
+    background-color: white;
+    color: #4CAF50;
+    border: 2px solid #4CAF50;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+nav button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Corpo do conteúdo */
+main {
+    margin: 2rem auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+main h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: white;
+    border: 1px solid #ddd;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    nav button {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    main h1 {
+        font-size: 1.5rem;
+    }
+
+    ul li {
+        font-size: 1rem;
+    }
+}
