@@ -87,6 +87,23 @@ Para utilizar a automação, é necessário configurar previamente um ambiente n
 1. **ECS**: Um cluster configurado para hospedar os serviços.
 2. **ECR**: Um repositório para armazenar as imagens Docker.
 3. **IAM Roles**: Permissões adequadas para execução dos jobs.
+4. **Snyk**: Sera necessario uma conta dentro da plataforma `Snyk` para se configurar uma das variaveis de ambiente.
+
+Aqui em baixo vai estar as variaveis necessarias para conseguir utilizar a automação
+  ```text    
+  AWS_ACCESS_KEY_ID = Acess Key dentro da sua conta da AWS
+  AWS_REGION = Região que sua conta se encontra
+  AWS_SECRET_ACCESS_KEY
+  ECR_URI
+  SNYK_TOKEN
+  DB_NAME
+  DB_HOST
+  DB_USER
+  DB_PASSWORD
+  ECS_CLUSTER
+  ECS_SERVICE
+  ECS_EXECUTION_ROLE_ARN
+  ```
 
 ## Secrets 
 Dentro do seu repositorio vamos ter que configurar alguma Secrets para tornar essa workflow acessivel
