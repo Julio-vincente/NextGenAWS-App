@@ -101,6 +101,7 @@ ECS_SERVICE = <Nome do serviço ECS>
 ECS_EXECUTION_ROLE_ARN = <ARN da role de execução ECS>
 SECURITY_GROUPS = <ID do seu grupo de segurança usado no ECS>
 SUBNETS = <IDs das subnets publicas utilizadas no ECS>
+
 ```
 
 ## 09 - Secrets
